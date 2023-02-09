@@ -1,45 +1,45 @@
 package user
 
 import (
+	"api-golang/src/interfaces"
+	createuser "api-golang/src/modules/user/controllers/createUser"
+	deleteuser "api-golang/src/modules/user/controllers/deleteUser"
+	showuser "api-golang/src/modules/user/controllers/showUser"
+	showusers "api-golang/src/modules/user/controllers/showUsers"
+	updateuser "api-golang/src/modules/user/controllers/updateUser"
+
 	"net/http"
 )
 
-type Route struct {
-	Uri        string
-	Method     string
-	Controller func(http.ResponseWriter, *http.Request)
-	Auth       bool
-}
-
-var userRoutes = []Route{
+var userRoutes = []interfaces.Route{
 	{
 		Uri:        "/user",
 		Method:     http.MethodPost,
-		Controller: CreateUserController,
+		Controller: createuser.Controller,
 		Auth:       false,
 	},
 	{
 		Uri:        "/user",
 		Method:     http.MethodGet,
-		Controller: func(w http.ResponseWriter, r *http.Request) {},
+		Controller: showusers.Controller,
 		Auth:       false,
 	},
 	{
 		Uri:        "/user/{userId}",
 		Method:     http.MethodGet,
-		Controller: func(w http.ResponseWriter, r *http.Request) {},
+		Controller: showuser.Controller,
 		Auth:       false,
 	},
 	{
 		Uri:        "/user/{userId}",
 		Method:     http.MethodPatch,
-		Controller: func(w http.ResponseWriter, r *http.Request) {},
+		Controller: updateuser.Controller,
 		Auth:       false,
 	},
 	{
 		Uri:        "/user/{userId}",
 		Method:     http.MethodDelete,
-		Controller: func(w http.ResponseWriter, r *http.Request) {},
+		Controller: deleteuser.Controller,
 		Auth:       false,
 	},
 }

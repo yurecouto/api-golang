@@ -1,5 +1,7 @@
-package user
+package showuser
 
-func ShowUserController() {
+import "net/http"
 
+func Controller(w http.ResponseWriter, r *http.Request) {
+	return
 }

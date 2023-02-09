@@ -1,5 +1,7 @@
-package user
+package updateuser
 
-func UpdateUserController() {
+import "net/http"
 
+func Controller(w http.ResponseWriter, r *http.Request) {
+	return
 }

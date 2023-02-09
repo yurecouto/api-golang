@@ -1,7 +1,7 @@
-package user
+package createuser
 
 import "net/http"
 
-func CreateUserController(w http.ResponseWriter, r *http.Request) {
-
+func Controller(w http.ResponseWriter, r *http.Request) {
+	return
 }
