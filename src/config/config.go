@@ -12,6 +12,7 @@ import (
 var (
 	ConnectString = ""
 	Port          = 0
+	SecretKey     []byte
 )
 
 func Load() {
@@ -31,4 +32,5 @@ func Load() {
 		os.Getenv("DB_PASSWORD"),
 	)
 
+	SecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 }

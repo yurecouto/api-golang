@@ -7,11 +7,10 @@ import (
 	showuser "api-golang/src/modules/user/controllers/showUser"
 	showusers "api-golang/src/modules/user/controllers/showUsers"
 	updateuser "api-golang/src/modules/user/controllers/updateUser"
-
 	"net/http"
 )
 
-var userRoutes = []interfaces.Route{
+var Routes = []interfaces.Route{
 	{
 		Uri:        "/user",
 		Method:     http.MethodPost,
