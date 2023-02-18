@@ -1,12 +1,12 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
 
 	"github.com/joho/godotenv"
+	"github.com/lib/pq"
 )
 
 var (
@@ -27,10 +27,12 @@ func Load() {
 		Port = 7777
 	}
 
-	ConnectString = fmt.Sprintf("%s:%s@babar.db.elephantsql.com/xqnhqtbh",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-	)
+	pgUrl, erro := pq.ParseURL(os.Getenv("ELEPHANT_SQL"))
+	if erro != nil {
+		log.Fatal("erro", erro)
+	}
+
+	ConnectString = pgUrl
 
 	SecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 }
