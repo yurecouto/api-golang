@@ -6,6 +6,7 @@ import (
 	"api-golang/src/modules/user/repository"
 	"api-golang/src/responses"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -23,7 +24,9 @@ func Controller(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	if erro = user.Prepare("cadastro"); erro != nil {
+	fmt.Println(user)
+
+	if erro = user.Prepare("register"); erro != nil {
 		responses.Erro(response, http.StatusBadRequest, erro)
 		return
 	}
