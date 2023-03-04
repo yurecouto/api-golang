@@ -4,14 +4,17 @@ import (
 	"api-golang/src/utils"
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/badoux/checkmail"
 )
 
 type User struct {
-	Name     string `json:"name,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
+	ID        uint64 `json:"id,omitempty"`
+	Name      string `json:"name,omitempty"`
+	Email     string `json:"email,omitempty"`
+	Password  string `json:"password,omitempty"`
+	CreatedAt string `json:"createdAt,omitempty"`
 }
 
 func (user *User) Prepare(stage string) error {
@@ -49,6 +52,7 @@ func (user *User) validate(stage string) error {
 func (user *User) format(stage string) error {
 	user.Name = strings.TrimSpace(user.Name)
 	user.Email = strings.TrimSpace(user.Email)
+	user.CreatedAt = time.Now().String()
 
 	if stage == "register" {
 		passwordHash, erro := utils.HashPassword(user.Password)
