@@ -2,7 +2,9 @@ package userrepository
 
 import (
 	"api-golang/src/models"
+	"api-golang/src/utils"
 	"database/sql"
+	"fmt"
 )
 
 type Users struct {
@@ -89,5 +91,85 @@ func (repo Users) FindById(userID uint64) (models.User, error) {
 		}
 	}
 
+	if user.CreatedAt.String() == "0001-01-01 00:00:00 +0000 UTC" {
+		return user, fmt.Errorf("No user was Found.")
+	}
+
 	return user, nil
+}
+
+func (repo Users) FindByIdAndUpdate(userID uint64, data models.User) (
+	models.User, error) {
+
+	lines, erro := repo.db.Query(
+		"SELECT id, name, email, created_at FROM users WHERE id = $1",
+		userID,
+	)
+	if erro != nil {
+		return models.User{}, erro
+	}
+	defer lines.Close()
+
+	var user models.User
+
+	if lines.Next() {
+		if erro = lines.Scan(
+			&user.ID,
+			&user.Name,
+			&user.Email,
+			&user.CreatedAt,
+		); erro != nil {
+			return models.User{}, erro
+		}
+	}
+
+	if user.CreatedAt.String() == "0001-01-01 00:00:00 +0000 UTC" {
+		return user, fmt.Errorf("No user was Found.")
+	}
+
+	statement, erro := repo.db.Prepare(
+		"UPDATE users SET name = $1, password = $2, email = $3 WHERE id = $4",
+	)
+	if erro != nil {
+		return data, erro
+	}
+	defer statement.Close()
+
+	var updatedUser models.User
+
+	updatedUser.ID = user.ID
+	updatedUser.CreatedAt = user.CreatedAt
+
+	if data.Name == "" {
+		updatedUser.Name = user.Name
+	} else {
+		updatedUser.Name = data.Name
+	}
+
+	if data.Password == "" {
+		updatedUser.Password = user.Password
+	} else {
+		passwordHash, erro := utils.HashPassword(data.Password)
+		if erro != nil {
+			return data, erro
+		}
+
+		updatedUser.Password = string(passwordHash)
+	}
+
+	if data.Email == "" {
+		updatedUser.Email = user.Email
+	} else {
+		updatedUser.Email = data.Email
+	}
+
+	if _, erro := statement.Exec(
+		updatedUser.Name,
+		updatedUser.Password,
+		updatedUser.Email,
+		userID); erro != nil {
+		return data, erro
+	}
+
+	return updatedUser, nil
 }

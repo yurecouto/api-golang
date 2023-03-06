@@ -11,9 +11,9 @@ import (
 )
 
 func Controller(w http.ResponseWriter, r *http.Request) {
-	params := chi.URLParam(r, "id")
+	Id := chi.URLParam(r, "id")
 
-	userID, erro := strconv.ParseUint(params, 10, 64)
+	userID, erro := strconv.ParseUint(Id, 10, 64)
 	if erro != nil {
 		responses.Erro(w, http.StatusBadRequest, erro)
 		return
