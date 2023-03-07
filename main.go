@@ -1,6 +1,7 @@
 package main
 
 import (
+	auth "api-golang/src/auth/routes"
 	"api-golang/src/config"
 	"api-golang/src/database"
 	"api-golang/src/utils"
@@ -19,9 +20,9 @@ func main() {
 	config.Load()
 	r := chi.NewRouter()
 
-	// r.Use(middleware.Logger)
-	// r.Use(MeuMiddleware)
-	r.Route("/user", user.Router)
+	r.Route("/auth", auth.Routes)
+
+	r.Route("/user", user.Routes)
 
 	db, erro := database.Connect()
 	if erro != nil {

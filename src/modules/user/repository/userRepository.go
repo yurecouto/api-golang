@@ -187,3 +187,34 @@ func (repo Users) Delete(userID uint64) error {
 
 	return nil
 }
+
+func (repo Users) FindByEmail(email string) (models.User, error) {
+	lines, erro := repo.db.Query(
+		"SELECT id, name, email, password, created_at FROM users WHERE email = $1",
+		email,
+	)
+	if erro != nil {
+		return models.User{}, erro
+	}
+	defer lines.Close()
+
+	var user models.User
+
+	if lines.Next() {
+		if erro = lines.Scan(
+			&user.ID,
+			&user.Name,
+			&user.Email,
+			&user.Password,
+			&user.CreatedAt,
+		); erro != nil {
+			return models.User{}, erro
+		}
+	}
+
+	if user.CreatedAt.String() == "0001-01-01 00:00:00 +0000 UTC" {
+		return user, fmt.Errorf("No user was Found.")
+	}
+
+	return user, nil
+}

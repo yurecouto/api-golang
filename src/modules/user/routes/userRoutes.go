@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func Router(r chi.Router) {
+func Routes(r chi.Router) {
 	r.Get("/", showallusers.Controller)
 	r.Get("/{id}", showuser.Controller)
 	r.Post("/", createuser.Controller)
