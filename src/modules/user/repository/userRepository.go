@@ -173,3 +173,17 @@ func (repo Users) FindByIdAndUpdate(userID uint64, data models.User) (
 
 	return updatedUser, nil
 }
+
+func (repo Users) Delete(userID uint64) error {
+	statement, erro := repo.db.Prepare("DELETE FROM users WHERE id = $1")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(userID); erro != nil {
+		return erro
+	}
+
+	return nil
+}
