@@ -2,9 +2,9 @@ package login
 
 import (
 	"api-golang/src/database"
-	"api-golang/src/models"
 	"api-golang/src/utils"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -15,11 +15,6 @@ import (
 type Login struct {
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
-}
-
-type LoginResponse struct {
-	user  models.User
-	token string
 }
 
 func Controller(w http.ResponseWriter, r *http.Request) {
@@ -56,9 +51,21 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if erro = utils.CheckPassword(login.Password, user.Password); erro != nil {
-		responses.Erro(w, http.StatusUnauthorized, erro)
+		responses.Erro(w, http.StatusUnauthorized, fmt.Errorf("Invalid Password."))
 		return
 	}
 
-	responses.JSON(w, http.StatusCreated, []byte(token))
+	type Response struct {
+		Name  string `json:"name"`
+		Email string `json:"email"`
+		Token string `json:"token"`
+	}
+
+	response := &Response{
+		Name:  user.Name,
+		Email: user.Email,
+		Token: token,
+	}
+
+	responses.JSON(w, http.StatusCreated, response)
 }
