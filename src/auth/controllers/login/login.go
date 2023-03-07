@@ -44,7 +44,13 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, erro := utils.GenerateToken(user.ID)
+	accessToken, erro := utils.GenerateToken(user.ID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	refreshToken, erro := utils.GenerateRefeshToken(user.ID)
 	if erro != nil {
 		responses.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -56,15 +62,17 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type Response struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
-		Token string `json:"token"`
+		Name         string `json:"name"`
+		Email        string `json:"email"`
+		AccessToken  string `json:"accessToken"`
+		RefreshToken string `json:"refreshToken"`
 	}
 
 	response := &Response{
-		Name:  user.Name,
-		Email: user.Email,
-		Token: token,
+		Name:         user.Name,
+		Email:        user.Email,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}
 
 	responses.JSON(w, http.StatusCreated, response)
