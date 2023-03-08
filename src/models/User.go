@@ -17,6 +17,12 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 }
 
+type UserToken struct {
+	ID     uint64 `json:"id,omitempty"`
+	Token  string `json:"token,omitempty"`
+	UserId string `json:"userId,omitempty"`
+}
+
 func (user *User) Prepare(stage string) error {
 	if erro := user.validate(stage); erro != nil {
 		return erro

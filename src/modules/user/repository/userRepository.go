@@ -218,3 +218,53 @@ func (repo Users) FindByEmail(email string) (models.User, error) {
 
 	return user, nil
 }
+
+func (repo Users) SaveRefreshToken(token string, id int32) (bool, error) {
+	statement, erro := repo.db.Prepare(
+		`INSERT INTO "user_tokens"("token", "user_id") values($1, $2)`,
+	)
+
+	if erro != nil {
+		return false, erro
+	}
+	defer statement.Close()
+
+	result, erro := statement.Exec(
+		token,
+		id,
+	)
+	if erro != nil {
+		return false, erro
+	}
+
+	return result != nil, nil
+}
+
+func (repo Users) FindRefreshToken(
+	token string,
+	id int32,
+) (models.UserToken, error) {
+
+	lines, erro := repo.db.Query(
+		"SELECT id, name, email, created_at FROM users WHERE id = $1",
+		id,
+	)
+	if erro != nil {
+		return models.UserToken{}, erro
+	}
+	defer lines.Close()
+
+	var userToken models.UserToken
+
+	if lines.Next() {
+		if erro = lines.Scan(
+			&userToken.ID,
+			&userToken.Token,
+			&userToken.UserId,
+		); erro != nil {
+			return models.UserToken{}, fmt.Errorf("No refresh token was Found.")
+		}
+	}
+
+	return userToken, nil
+}

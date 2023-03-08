@@ -75,5 +75,11 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 		RefreshToken: refreshToken,
 	}
 
+	_, erro = repository.SaveRefreshToken(refreshToken, int32(user.ID))
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
 	responses.JSON(w, http.StatusCreated, response)
 }
