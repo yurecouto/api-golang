@@ -11,7 +11,6 @@ import (
 var (
 	DatabaseConnectString = ""
 	Port                  = ""
-	SecretKey             []byte
 	AccessKey             []byte
 	RefreshKey            []byte
 )

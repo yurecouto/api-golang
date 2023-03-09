@@ -242,12 +242,11 @@ func (repo Users) SaveRefreshToken(token string, id int32) (bool, error) {
 
 func (repo Users) FindRefreshToken(
 	token string,
-	id int32,
 ) (models.UserToken, error) {
 
 	lines, erro := repo.db.Query(
-		"SELECT id, name, email, created_at FROM users WHERE id = $1",
-		id,
+		"SELECT id, token, user_id FROM user_tokens WHERE token = $1",
+		token,
 	)
 	if erro != nil {
 		return models.UserToken{}, erro
