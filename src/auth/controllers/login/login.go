@@ -44,6 +44,11 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if erro = utils.CheckPassword(login.Password, user.Password); erro != nil {
+		responses.Erro(w, http.StatusUnauthorized, fmt.Errorf("Invalid Password."))
+		return
+	}
+
 	accessToken, erro := utils.GenerateToken(user.ID)
 	if erro != nil {
 		responses.Erro(w, http.StatusInternalServerError, erro)
@@ -53,11 +58,6 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 	refreshToken, erro := utils.GenerateRefeshToken(user.ID)
 	if erro != nil {
 		responses.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	if erro = utils.CheckPassword(login.Password, user.Password); erro != nil {
-		responses.Erro(w, http.StatusUnauthorized, fmt.Errorf("Invalid Password."))
 		return
 	}
 

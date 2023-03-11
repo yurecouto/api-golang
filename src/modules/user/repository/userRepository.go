@@ -219,7 +219,7 @@ func (repo Users) FindByEmail(email string) (models.User, error) {
 	return user, nil
 }
 
-func (repo Users) SaveRefreshToken(token string, id int32) (bool, error) {
+func (repo Users) SaveRefreshToken(token string, userID int32) (bool, error) {
 	statement, erro := repo.db.Prepare(
 		`INSERT INTO "user_tokens"("token", "user_id") values($1, $2)`,
 	)
@@ -231,7 +231,7 @@ func (repo Users) SaveRefreshToken(token string, id int32) (bool, error) {
 
 	result, erro := statement.Exec(
 		token,
-		id,
+		userID,
 	)
 	if erro != nil {
 		return false, erro
@@ -240,9 +240,7 @@ func (repo Users) SaveRefreshToken(token string, id int32) (bool, error) {
 	return result != nil, nil
 }
 
-func (repo Users) FindRefreshToken(
-	token string,
-) (models.UserToken, error) {
+func (repo Users) FindRefreshToken(token string) (models.UserToken, error) {
 
 	lines, erro := repo.db.Query(
 		"SELECT id, token, user_id FROM user_tokens WHERE token = $1",
@@ -266,4 +264,18 @@ func (repo Users) FindRefreshToken(
 	}
 
 	return userToken, nil
+}
+
+func (repo Users) DeleteRefreshToken(token string) error {
+	statement, erro := repo.db.Prepare("DELETE FROM user_tokens WHERE token = $1")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(token); erro != nil {
+		return erro
+	}
+
+	return nil
 }

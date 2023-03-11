@@ -8,16 +8,16 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func returnVerificationKey(token *jwt.Token) (interface{}, error) {
+func ReturnVerificationKey(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-		return nil, fmt.Errorf("Metodo errado %v", token.Header["alg"])
+		return nil, fmt.Errorf("Wrong method %v", token.Header["alg"])
 	}
 
 	return config.AccessKey, nil
 }
 
 func ValidateToken(tokenString string) error {
-	token, erro := jwt.Parse(tokenString, returnVerificationKey)
+	token, erro := jwt.Parse(tokenString, ReturnVerificationKey)
 	if erro != nil {
 		return erro
 	}

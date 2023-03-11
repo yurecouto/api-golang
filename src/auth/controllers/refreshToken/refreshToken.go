@@ -25,8 +25,46 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var userID uint64 = uint64(savedToken.ID)
+
 	erro = utils.ValidateToken(savedToken.Token)
 	if erro != nil {
 		responses.Erro(w, http.StatusInternalServerError, erro)
 	}
+
+	accessToken, erro := utils.GenerateToken(userID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	refreshToken, erro := utils.GenerateRefeshToken(userID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	type Response struct {
+		AccessToken  string `json:"accessToken"`
+		RefreshToken string `json:"refreshToken"`
+	}
+
+	response := &Response{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
+
+	_, erro = repository.SaveRefreshToken(refreshToken, int32(userID))
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	erro = repository.DeleteRefreshToken(requestToken)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	responses.JSON(w, http.StatusCreated, response)
 }

@@ -1,6 +1,7 @@
 package user
 
 import (
+	"api-golang/src/middlewares"
 	createuser "api-golang/src/modules/user/controllers/createUser"
 	deleteuser "api-golang/src/modules/user/controllers/deleteUser"
 	showallusers "api-golang/src/modules/user/controllers/showAllUsers"
@@ -11,6 +12,8 @@ import (
 )
 
 func Routes(r chi.Router) {
+	r.Use(middlewares.EnsureAuthenticated)
+
 	r.Get("/", showallusers.Controller)
 	r.Get("/{id}", showuser.Controller)
 	r.Post("/", createuser.Controller)
