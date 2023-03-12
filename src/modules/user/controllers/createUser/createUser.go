@@ -11,7 +11,7 @@ import (
 )
 
 func Controller(w http.ResponseWriter, r *http.Request) {
-	// r.Context().Value("key")
+	// userId := r.Context().Value("userId")
 	requestBody, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		responses.Erro(w, http.StatusUnprocessableEntity, erro)
