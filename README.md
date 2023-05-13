@@ -47,6 +47,23 @@ O diretório "config" possui o arquivo "config.go" é responsável por carregar 
 
 O arquivo "config.go" define valores padrão para as variáveis de ambiente caso elas não sejam definidas no ambiente em que o aplicativo está sendo executado. Isso garante que o aplicativo possa ser executado em diferentes ambientes sem precisar configurar manualmente as variáveis de ambiente.
 
+## .env exemple
+```env
+# Database
+DB_PORT=
+DB_HOST=
+DB_USER=
+DB_NAME=
+DB_PASS=
+
+# Auth
+SECRET_KEY_ACCESS=
+SECRET_KEY_REFRESH=
+
+# Api
+API_PORT=
+```
+
 
 # Database
 O diretório "database" contém o arquivo "database.go", que é responsável por configurar o ORM GORM para se conectar e interagir com um banco de dados PostgreSQL.
