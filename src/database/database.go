@@ -23,7 +23,10 @@ func Connect() (*gorm.DB, error) {
 		return db, erro
 	}
 
-	db.AutoMigrate(&models.User{}, &models.UserToken{})
+	db.AutoMigrate(
+		&models.User{},
+		&models.UserToken{},
+	)
 
 	return db, nil
 }

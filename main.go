@@ -11,11 +11,10 @@ import (
 )
 
 func main() {
+	config.Load()
 	utils.Log("Golang API Starting...")
 
-	config.Load()
 	r := chi.NewRouter()
-
 	r.Route("/", router.Routes)
 
 	_, erro := database.Connect()
