@@ -1,6 +1,21 @@
 # api-golang
-Template Restful API Written in Go for future projects.
+Esta documentação tem como objetivo descrever a estrutura da API em Golang e como ela foi desenvolvida. A aplicação utiliza diversas bibliotecas, incluindo o GORM, Chi, Bcrypt e JWT, para criar uma estrutura robusta e segura.
 
+### GORM
+O GORM é uma biblioteca ORM (Object-Relational Mapping) para Go que permite interagir com bancos de dados de forma mais simples e intuitiva. Ele é utilizado na API para realizar operações no banco de dados PostgreSQL.
+
+### Chi
+O Chi é um roteador HTTP em Go que oferece diversas funcionalidades, incluindo middleware e roteamento dinâmico. Ele é utilizado na API para gerenciar as rotas e as requisições HTTP.
+
+### Bcrypt
+O Bcrypt é uma biblioteca de hashing de senhas que oferece um alto nível de segurança. Ele é utilizado na API para proteger as senhas dos usuários armazenadas no banco de dados.
+
+### JWT
+O JWT (JSON Web Token) é um padrão aberto que define um formato compacto e autocontido para transmitir informações entre as partes como um objeto JSON. Ele é utilizado na API para autenticar as requisições HTTP.
+SOLID
+
+A API foi desenvolvida seguindo os princípios do SOLID, que é um conjunto de princípios de programação orientada a objetos que visam tornar o código mais legível, sustentável e fácil de manter.
+#
 # main.go
 O arquivo main.go é o ponto de entrada da aplicação. Ele é responsável por carregar as variáveis de ambiente, definir as rotas da API, conectar ao banco de dados e iniciar o servidor para ouvir as solicitações HTTP.
 
