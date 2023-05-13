@@ -2,22 +2,28 @@ package database
 
 import (
 	"api-golang/src/config"
-	"database/sql"
+	"api-golang/src/models"
+	"api-golang/src/utils"
 
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	_ "gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func Connect() (*sql.DB, error) {
-	db, erro := sql.Open("postgres", config.DatabaseConnectString)
+var db *gorm.DB
 
+func Connect() (*gorm.DB, error) {
+	var erro error
+	dsn := config.ConnectString
+
+	db, erro = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if erro != nil {
-		return nil, erro
+		utils.Error(erro)
+
+		return db, erro
 	}
 
-	if erro = db.Ping(); erro != nil {
-		db.Close()
-		return nil, erro
-	}
+	db.AutoMigrate(&models.User{}, &models.UserToken{})
 
 	return db, nil
 }

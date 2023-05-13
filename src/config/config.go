@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	DatabaseConnectString = ""
-	Port                  = ""
-	AccessKey             []byte
-	RefreshKey            []byte
+	ConnectString = ""
+	ApiPort       = ""
+	AccessKey     []byte
+	RefreshKey    []byte
 )
 
 func Load() {
@@ -22,9 +22,9 @@ func Load() {
 		log.Fatal(erro)
 	}
 
-	Port = fmt.Sprintf(":%s", os.Getenv("API_PORT"))
+	ApiPort = fmt.Sprintf(":%s", os.Getenv("API_PORT"))
 
-	DatabaseConnectString = fmt.Sprintf("postgres://%s:%s@%s/%s",
+	ConnectString = fmt.Sprintf("postgres://%s:%s@%s/%s",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASS"),
 		os.Getenv("DB_HOST"),

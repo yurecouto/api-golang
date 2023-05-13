@@ -18,7 +18,7 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user models.User
+	var user *models.User
 	if erro = json.Unmarshal(requestBody, &user); erro != nil {
 		responses.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -34,10 +34,9 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 		responses.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	defer db.Close()
 
 	repository := userrepository.NewUserRepository(db)
-	_, erro = repository.Create(user)
+	erro = repository.Create(user)
 	if erro != nil {
 		responses.Erro(w, http.StatusInternalServerError, erro)
 		return
