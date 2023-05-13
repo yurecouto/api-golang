@@ -4,7 +4,7 @@ import (
 	"api-golang/src/database"
 	"api-golang/src/models"
 	userrepository "api-golang/src/modules/user/repository"
-	responses "api-golang/src/utils"
+	"api-golang/src/utils"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -16,13 +16,13 @@ import (
 func Controller(w http.ResponseWriter, r *http.Request) {
 	requestBody, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
-		responses.Erro(w, http.StatusUnprocessableEntity, erro)
+		utils.ResponseError(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 
 	var user *models.User
 	if erro = json.Unmarshal(requestBody, &user); erro != nil {
-		responses.Erro(w, http.StatusBadRequest, erro)
+		utils.ResponseError(w, http.StatusBadRequest, erro)
 		return
 	}
 
@@ -30,13 +30,13 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	userID, erro := strconv.ParseUint(Id, 10, 64)
 	if erro != nil {
-		responses.Erro(w, http.StatusBadRequest, erro)
+		utils.ResponseError(w, http.StatusBadRequest, erro)
 		return
 	}
 
 	db, erro := database.Connect()
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
@@ -44,9 +44,9 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	updatedUser, erro := repo.Update(userID, user)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, updatedUser)
+	utils.ResponseJson(w, http.StatusOK, updatedUser)
 }

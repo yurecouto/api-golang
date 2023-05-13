@@ -4,7 +4,6 @@ import (
 	"api-golang/src/database"
 	userrepository "api-golang/src/modules/user/repository"
 	"api-golang/src/utils"
-	responses "api-golang/src/utils"
 	"net/http"
 )
 
@@ -13,14 +12,14 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	db, erro := database.Connect()
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
 	repository := userrepository.NewUserRepository(db)
 	savedToken, erro := repository.FindRefreshToken(requestToken)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
@@ -28,18 +27,19 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	erro = utils.ValidateToken(savedToken.Token)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
+		return
 	}
 
 	accessToken, erro := utils.GenerateToken(userID)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
 	refreshToken, erro := utils.GenerateRefeshToken(userID)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
@@ -55,15 +55,15 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	erro = repository.SaveRefreshToken(userID, refreshToken)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
 	erro = repository.DeleteRefreshToken(requestToken)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	responses.JSON(w, http.StatusCreated, response)
+	utils.ResponseJson(w, http.StatusCreated, response)
 }

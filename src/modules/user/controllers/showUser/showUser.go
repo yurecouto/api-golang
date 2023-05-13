@@ -3,7 +3,7 @@ package showuser
 import (
 	"api-golang/src/database"
 	userrepository "api-golang/src/modules/user/repository"
-	responses "api-golang/src/utils"
+	"api-golang/src/utils"
 	"net/http"
 	"strconv"
 
@@ -15,13 +15,13 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	userID, erro := strconv.ParseUint(Id, 10, 64)
 	if erro != nil {
-		responses.Erro(w, http.StatusBadRequest, erro)
+		utils.ResponseError(w, http.StatusBadRequest, erro)
 		return
 	}
 
 	db, erro := database.Connect()
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
@@ -29,9 +29,9 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	user, erro := repo.FindById(userID)
 	if erro != nil {
-		responses.Erro(w, http.StatusInternalServerError, erro)
+		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, user)
+	utils.ResponseJson(w, http.StatusOK, user)
 }
