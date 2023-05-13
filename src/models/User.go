@@ -20,7 +20,7 @@ type User struct {
 type UserToken struct {
 	ID     uint64 `json:"id,omitempty"`
 	Token  string `json:"token,omitempty"`
-	UserId string `json:"userId,omitempty"`
+	UserId uint64 `json:"userId,omitempty"`
 }
 
 func (user *User) Prepare(stage string) error {
