@@ -24,23 +24,33 @@ func (r *UserRepository) Create(user *models.User) error {
 	return nil
 }
 
-func (r *UserRepository) Update(user *models.User) error {
-	result := r.db.Save(user)
-	if result.Error != nil {
-		return result.Error
+func (r *UserRepository) Update(id uint64, updatedUser *models.User) (*models.User, error) {
+	var user models.User
+	if err := r.db.First(&user, id).Error; err != nil {
+		return nil, err
 	}
+
+	if err := r.db.Model(&user).Updates(updatedUser).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *UserRepository) Delete(id uint64) error {
+	var user models.User
+	if err := r.db.First(&user, id).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.Delete(&user).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r *UserRepository) Delete(user *models.User) error {
-	result := r.db.Delete(user)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
-}
-
-func (r *UserRepository) GetById(id uint) (*models.User, error) {
+func (r *UserRepository) FindById(id uint64) (*models.User, error) {
 	var user models.User
 	result := r.db.First(&user, id)
 	if result.Error != nil {
@@ -49,7 +59,7 @@ func (r *UserRepository) GetById(id uint) (*models.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) GetAll() ([]models.User, error) {
+func (r *UserRepository) FindAll() ([]models.User, error) {
 	var users []models.User
 	result := r.db.Find(&users)
 	if result.Error != nil {
