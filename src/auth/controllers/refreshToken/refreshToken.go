@@ -25,7 +25,7 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 
 	var userID uint64 = uint64(savedToken.ID)
 
-	erro = utils.ValidateToken(savedToken.Token)
+	erro = utils.ValidateToken(savedToken.Token, true)
 	if erro != nil {
 		utils.ResponseError(w, http.StatusInternalServerError, erro)
 		return

@@ -13,7 +13,10 @@ import (
 func EnsureAuthenticated(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("x-access-token")
-		token, erro := jwt.Parse(tokenString, utils.ReturnVerificationKey)
+		token, erro := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			return utils.ReturnVerificationKey(token, false)
+		})
+
 		if erro != nil {
 			utils.ResponseError(w, http.StatusUnauthorized, erro)
 			return
@@ -26,7 +29,7 @@ func EnsureAuthenticated(next http.Handler) http.Handler {
 				return
 			}
 
-			if erro := utils.ValidateToken(tokenString); erro != nil {
+			if erro := utils.ValidateToken(tokenString, false); erro != nil {
 				utils.ResponseError(w, http.StatusUnauthorized, erro)
 				return
 			}

@@ -41,7 +41,7 @@ func Controller(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if erro = utils.CheckPassword(login.Password, user.Password); erro != nil {
+	if erro = utils.PasswordCheck(login.Password, user.Password); erro != nil {
 		utils.ResponseError(w, http.StatusUnauthorized, fmt.Errorf("Invalid Password."))
 		return
 	}

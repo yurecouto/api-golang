@@ -60,7 +60,7 @@ func (user *User) format(stage string) error {
 	user.Email = strings.TrimSpace(user.Email)
 
 	if stage == "register" {
-		passwordHash, erro := utils.HashPassword(user.Password)
+		passwordHash, erro := utils.PasswordHash(user.Password)
 		if erro != nil {
 			return erro
 		}
